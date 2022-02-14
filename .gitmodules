@@ -7,3 +7,6 @@
 [submodule "external/doctest"]
 	path = external/doctest
 	url = https://github.com/onqtam/doctest.git
+[submodule "external/cryptopp"]
+	path = external/cryptopp
+	url = git@github.com:fercgomes/cryptopp.git

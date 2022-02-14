@@ -81,28 +81,26 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 ##  Project  ##
 ###############
 
-
-
 # Check for LTO support (needs to be after project(...) )
 find_lto(CXX)
 
 #==========================#
 #  Punkchain executable  #
 #==========================#
-
 # Always list the source files explicitly, including headers so that they are listed in the IDE
 # If you need to use files based on a variable value, use target_sources
-add_executable(Punkchain source/main.cpp source/chain.cpp source/block.cpp)
+add_executable(Punkchain src/main.cpp src/chain.cpp src/block.cpp)
 
 target_link_libraries(Punkchain
-    #PUBLIC # Useful for libraries, see https://cmake.org/cmake/help/latest/manual/cmake-buildsystem.7.html for more details about transitive usage requirements.
+    #PUBLIC  # Useful for libraries, see https://cmake.org/cmake/help/latest/manual/cmake-buildsystem.7.html for more details about transitive usage requirements.
         #libraries/targets to link when linking this library
         #this will automatically setup the needed flags and dependencies when linking against this target
     PRIVATE # The following libraries are only linked for this target, and its flags/dependencies will not be used when linking against this target
-        general fmt::fmt spdlog::spdlog # It is possible to link some libraries for debug or optimized builds only
+        general fmt::fmt spdlog::spdlog cryptopp-shared # It is possible to link some libraries for debug or optimized builds only
         #debug DEBUGLIBS
         #optimized RELEASELIBS
 )
+
 
 # If you need platform specific files to be compiled and do not want to add a new target for this,
 # you can use target_sources instead. Note that configuration-dependent sources are not supported yet (see https://gitlab.kitware.com/cmake/cmake/issues/18233)
@@ -123,7 +121,8 @@ target_link_libraries(Punkchain
 target_compile_features(Punkchain PRIVATE cxx_std_14)
 
 # CMake scripts extensions
-target_set_warnings(Punkchain ENABLE ALL AS_ERROR ALL DISABLE Annoying) # Helper that can set default warning flags for you
+# target_set_warnings(Punkchain ENABLE ALL AS_ERROR ALL DISABLE Annoying) # Helper that can set default warning flags for you
+target_set_warnings(Punkchain ENABLE ALL ) # Helper that can set default warning flags for you
 target_enable_lto(Punkchain optimized) #enable lto if available for non-debug configurations
 copy_dlls_for_debug(Punkchain "" "") # Copy dependencies next to the executable (DLLs for example)
 
