@@ -23,6 +23,26 @@ jobs:
         with:
           submodules: "recursive"
 
+      - name: Cache Boost
+        uses: actions/cache@v1.0.3
+        id: cache-boost
+        with:
+          path: "~/boost"
+          key: libboost1.74-dev
+      - name: Install Boost
+        env:
+          CACHE_HIT: ${{steps.cache-boost.outputs.cache-hit}}
+        run: |
+          if [[ "$CACHE_HIT" == 'true' ]]; then
+            sudo cp --force --recursive ~/boost/* /
+          else
+            sudo apt-get update && sudo apt-get install -yq libboost1.74-dev
+            mkdir -p ~/boost
+            for dep in libboost1.74-dev; do
+              dpkg -L $dep | while IFS= read -r f; do if test -f $f; then echo $f; fi; done | xargs cp --parents --target-directory ~/bosts/
+            done
+          fi
+
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -31,6 +51,8 @@ jobs:
       - name: Build
         # Build your program with the given configuration
         run: cmake --build ${{runner.workspace}}/build --config ${{env.BUILD_TYPE}}
+        env:
+          MAKEFLAGS: "-j2"
 
       - name: Test
         working-directory: ${{runner.workspace}}/build
