@@ -84,6 +84,13 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 # Check for LTO support (needs to be after project(...) )
 find_lto(CXX)
 
+# Pthreads
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+# Find Boost
+find_package(Boost 1.74.0 REQUIRED)
+
 #==========================#
 #  Punkchain executable  #
 #==========================#
@@ -94,6 +101,7 @@ add_executable(Punkchain
             src/chain.cpp
             src/block.cpp
             src/wallet.cpp
+            src/transaction.cpp
             src/utils.cpp)
 
 target_link_libraries(Punkchain
@@ -101,7 +109,7 @@ target_link_libraries(Punkchain
         #libraries/targets to link when linking this library
         #this will automatically setup the needed flags and dependencies when linking against this target
     PRIVATE # The following libraries are only linked for this target, and its flags/dependencies will not be used when linking against this target
-        general fmt::fmt spdlog::spdlog cryptopp-shared # It is possible to link some libraries for debug or optimized builds only
+        general fmt::fmt spdlog::spdlog cryptopp-shared ${Boost_LIBRARIES} # It is possible to link some libraries for debug or optimized builds only
         #debug DEBUGLIBS
         #optimized RELEASELIBS
 )
@@ -123,7 +131,7 @@ target_link_libraries(Punkchain
 
 # Require c++14, this is better than setting CMAKE_CXX_STANDARD since it won't pollute other targets
 # note : cxx_std_* features were added in CMake 3.8.2
-target_compile_features(Punkchain PRIVATE cxx_std_14)
+target_compile_features(Punkchain PRIVATE cxx_std_17)
 
 # CMake scripts extensions
 # target_set_warnings(Punkchain ENABLE ALL AS_ERROR ALL DISABLE Annoying) # Helper that can set default warning flags for you
@@ -133,6 +141,8 @@ copy_dlls_for_debug(Punkchain "" "") # Copy dependencies next to the executable 
 
 # Setup our project as the startup project for Visual so that people don't need to do it manually
 set_directory_properties(PROPERTIES VS_STARTUP_PROJECT Punkchain)
+
+add_subdirectory(src/p2p)
 
 #===============#
 #  Foo library  #

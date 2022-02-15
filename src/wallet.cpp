@@ -19,6 +19,8 @@ using CryptoPP::SHA1;
 Wallet::Wallet()
 {
     std::cout << "Init wallet" << std::endl;
+    balance = 500.0f;
+
     GeneratePrivateKey();
     GeneratePublicKey();
 
@@ -27,6 +29,8 @@ Wallet::Wallet()
 }
 
 ECDSA<ECP, SHA1>::PublicKey Wallet::GetPublicKey() { return publicKey; }
+
+const std::string Wallet::GetPublicAddress() const noexcept { return std::string("TODO"); }
 
 void Wallet::GeneratePrivateKey()
 {
@@ -74,3 +78,5 @@ bool Wallet::VerifyMessage(const ECDSA<ECP, SHA1>::PublicKey& key, const std::st
 
     return result;
 }
+
+const float Wallet::GetBalance() const noexcept { return balance; }

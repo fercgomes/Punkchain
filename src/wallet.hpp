@@ -15,13 +15,17 @@ private:
     void GeneratePrivateKey();
     void GeneratePublicKey();
 
+    float balance;
+
 public:
     Wallet();
 
     ECDSA<ECP, SHA1>::PublicKey GetPublicKey();
+    const std::string           GetPublicAddress() const noexcept;
 
     bool SignMessage(const std::string& message, std::string& signature);
-
     bool VerifyMessage(const ECDSA<ECP, SHA1>::PublicKey& key, const std::string& message,
                        std::string& signature);
+
+    const float GetBalance() const noexcept;
 };
