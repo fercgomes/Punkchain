@@ -26,3 +26,11 @@ add_test(
     NAME BP.successtest
     COMMAND successtest ${TEST_RUNNER_PARAMS}
 )
+
+add_executable(wallettest wallet.test.cpp)
+target_link_libraries(wallettest doctest::doctest)
+
+add_test(
+    NAME BP.wallettest
+    COMMAND wallettest ${TEST_RUNNER_PARAMS}
+)

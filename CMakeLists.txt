@@ -89,7 +89,12 @@ find_lto(CXX)
 #==========================#
 # Always list the source files explicitly, including headers so that they are listed in the IDE
 # If you need to use files based on a variable value, use target_sources
-add_executable(Punkchain src/main.cpp src/chain.cpp src/block.cpp)
+add_executable(Punkchain
+            src/main.cpp
+            src/chain.cpp
+            src/block.cpp
+            src/wallet.cpp
+            src/utils.cpp)
 
 target_link_libraries(Punkchain
     #PUBLIC  # Useful for libraries, see https://cmake.org/cmake/help/latest/manual/cmake-buildsystem.7.html for more details about transitive usage requirements.
