@@ -89,7 +89,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 # Find Boost
-find_package(Boost 1.74.0 REQUIRED)
+find_package(Boost 1.65.0 REQUIRED)
 
 #==========================#
 #  Punkchain executable  #
