@@ -5,6 +5,7 @@
 #include <files.h>
 #include <filters.h>
 #include <fmt/format.h>
+#include <hex.h>
 #include <integer.h>
 #include <iostream>
 #include <oids.h>
@@ -18,19 +19,31 @@ using CryptoPP::SHA1;
 
 Wallet::Wallet()
 {
-    std::cout << "Init wallet" << std::endl;
-    balance = 500.0f;
+    // std::cout << "Init wallet" << std::endl;
+    balance = 500.0;
 
     GeneratePrivateKey();
     GeneratePublicKey();
 
-    Utils::PrintPublicKey(publicKey);
-    Utils::PrintPrivateKey(privateKey);
+    // Utils::PrintPublicKey(publicKey);
+    // Utils::PrintPrivateKey(privateKey);
 }
 
 ECDSA<ECP, SHA1>::PublicKey Wallet::GetPublicKey() { return publicKey; }
 
-const std::string Wallet::GetPublicAddress() const noexcept { return std::string("TODO"); }
+const std::string Wallet::GetPublicAddress() const noexcept
+{
+    CryptoPP::ByteQueue  queue;
+    CryptoPP::HexEncoder encoder;
+    std::string          output;
+
+    encoder.Attach(new CryptoPP::StringSink(output));
+    publicKey.Save(queue);
+    queue.CopyTo(encoder);
+    encoder.MessageEnd();
+
+    return output;
+}
 
 void Wallet::GeneratePrivateKey()
 {
@@ -79,4 +92,4 @@ bool Wallet::VerifyMessage(const ECDSA<ECP, SHA1>::PublicKey& key, const std::st
     return result;
 }
 
-const float Wallet::GetBalance() const noexcept { return balance; }
+const double Wallet::GetBalance() const noexcept { return balance; }

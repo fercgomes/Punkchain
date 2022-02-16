@@ -1,3 +1,4 @@
+#pragma once
 #include <eccrypto.h>
 #include <osrng.h>
 #include <sha.h>
@@ -15,7 +16,7 @@ private:
     void GeneratePrivateKey();
     void GeneratePublicKey();
 
-    float balance;
+    double balance;
 
 public:
     Wallet();
@@ -27,5 +28,5 @@ public:
     bool VerifyMessage(const ECDSA<ECP, SHA1>::PublicKey& key, const std::string& message,
                        std::string& signature);
 
-    const float GetBalance() const noexcept;
+    const double GetBalance() const noexcept;
 };

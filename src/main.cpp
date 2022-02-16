@@ -1,21 +1,19 @@
 #include <iostream>
+#include "transaction.hpp"
 #include "wallet.hpp"
 
 int main(int argc, char* argv[])
 {
     std::cout << "== PUNKCHAIN == " << std::endl;
     Wallet wallet;
+    Wallet wallet2;
 
-    std::string testStr = "ednaldo pereira";
-    std::string signature;
+    std::cout << "Public Address" << std::endl;
+    std::cout << wallet.GetPublicAddress() << std::endl;
 
-    bool signResult = wallet.SignMessage(testStr, signature);
-    auto publicKey  = wallet.GetPublicKey();
+    Transaction t1(wallet, wallet2.GetPublicAddress(), 10.0);
 
-    // std::cout << signature << std::endl;
-
-    bool verifyResult = wallet.VerifyMessage(publicKey, testStr, signature);
-    std::cout << verifyResult << std::endl;
+    std::cout << t1 << std::endl;
 
     return 0;
 }

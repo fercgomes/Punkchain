@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -6,16 +7,22 @@
 struct TxIn
 {
     uint32_t    timestamp;
-    float       amount;
+    double      amount;
     std::string address;
     std::string signature;
 };
 
 struct TxOut
 {
-    float       amount;
+    double      amount;
     std::string address;
+
+    std::string ToString();
+
+    friend std::ostream& operator<<(std::ostream& os, const TxIn& txIn);
 };
+
+std::ostream& operator<<(std::ostream& os, const TxOut& txOut);
 
 class Transaction
 {
@@ -25,5 +32,9 @@ private:
     std::vector<TxOut> txOutputs;
 
 public:
-    Transaction(Wallet& senderWallet, std::string recipientAddress, float amount);
+    Transaction(Wallet& senderWallet, std::string recipientAddress, const double amount);
+
+    friend std::ostream& operator<<(std::ostream& os, const Transaction& tx);
 };
+
+std::ostream& operator<<(std::ostream& os, const Transaction& tx);
