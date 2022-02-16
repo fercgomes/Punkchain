@@ -24,4 +24,6 @@ namespace Utils
 void PrintDomainParameters(const DL_GroupParameters_EC<ECP>& params);
 void PrintPrivateKey(const ECDSA<ECP, SHA1>::PrivateKey& key);
 void PrintPublicKey(const ECDSA<ECP, SHA1>::PublicKey& key);
+
+std::string HashString(std::string msg);
 } // namespace Utils

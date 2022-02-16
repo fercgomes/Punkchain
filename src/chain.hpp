@@ -1,11 +1,15 @@
+#include <memory>
 #include <string>
 #include <vector>
+#include "block.hpp"
+#include "transaction.hpp"
 
 class Chain
 {
 private:
-    std::vector<std::string> transactions;
+    // Transaction pool (mempool)
+    std::vector<std::unique_ptr<Transaction>> pool;
+    std::vector<std::unique_ptr<Block>>       blocks;
 
 public:
-    std::vector<std::string> GetTransactions();
 };

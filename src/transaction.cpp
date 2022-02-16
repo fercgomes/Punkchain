@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <time.h>
+#include "utils.hpp"
 
 std::ostream& operator<<(std::ostream& os, const TxOut& txOut)
 {
@@ -31,18 +32,30 @@ Transaction::Transaction(Wallet& senderWallet, std::string recipientAddress, con
                      .address = senderWallet.GetPublicAddress()};
         TxOut txOut2{.amount = amount, .address = recipientAddress};
 
-        // Sign transaction ?
-        std::string       signature;
-        std::stringstream ss;
-        ss << txOut1 << "-" << txOut2;
-        std::string message = ss.str();
-
-        senderWallet.SignMessage(message, signature);
-
+        // This is a generated TxIn...
+        // It must be an accepted tx from the blockchain
+        // whose address pubkey matches this wallet.
+        //
+        // Validation means verifying the signature of
+        // this Tx with the public key announced in the
+        // UTXO being spent. Tx is valid iff public key
+        // of UTXO's recipient verifies the Hash(UTXO + NewOwnerPubAddr)
+        // See "2. Transactions" of Bitcoin's Whitepaper
         TxIn txIn{.timestamp = std::time(nullptr),
                   .amount    = senderWallet.GetBalance(),
-                  .address   = senderWallet.GetPublicAddress(),
-                  .signature = signature};
+                  .address   = senderWallet.GetPublicAddress()};
+
+        // Hash(UTXO + NewOwnerPubKey)
+        std::string       signature;
+        std::stringstream ss;
+
+        ss << txIn.timestamp << "-" << txIn.address << "-" << txIn.amount;
+
+        std::string message   = ss.str();
+        std::string hashedMsg = Utils::HashString(message);
+
+        senderWallet.SignMessage(hashedMsg, signature);
+        txIn.signature = signature; // TxIn is signed
 
         txInputs.push_back(txIn);
         txOutputs.push_back(txOut1);

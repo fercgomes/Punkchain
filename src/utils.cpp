@@ -1,9 +1,11 @@
 #include <aes.h>
 #include <assert.h>
+#include <cryptlib.h>
 #include <eccrypto.h>
 #include <files.h>
 #include <filters.h>
 #include <fmt/format.h>
+#include <hex.h>
 #include <integer.h>
 #include <iostream>
 #include <oids.h>
@@ -57,4 +59,20 @@ void PrintPublicKey(const ECDSA<ECP, SHA1>::PublicKey& key)
     cout << " X: " << key.GetPublicElement().x << endl;
     cout << " Y: " << key.GetPublicElement().y << endl;
 }
+
+std::string HashString(std::string msg)
+{
+    std::string          t;
+    std::string          digest;
+    CryptoPP::HexEncoder encoder(new CryptoPP::StringSink(t));
+    CryptoPP::SHA256     hash;
+
+    hash.Update((const CryptoPP::byte*)msg.data(), msg.size());
+    digest.resize(hash.DigestSize());
+    hash.Final((CryptoPP::byte*)&digest[0]);
+    CryptoPP::StringSource(digest, true, new CryptoPP::Redirector(encoder));
+
+    return t;
+}
+
 }; // namespace Utils
