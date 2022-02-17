@@ -102,7 +102,8 @@ add_executable(Punkchain
             src/block.cpp
             src/wallet.cpp
             src/transaction.cpp
-            src/utils.cpp)
+            src/utils.cpp
+            src/merkle.cpp)
 
 target_link_libraries(Punkchain
     #PUBLIC  # Useful for libraries, see https://cmake.org/cmake/help/latest/manual/cmake-buildsystem.7.html for more details about transitive usage requirements.

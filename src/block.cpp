@@ -1,7 +1,29 @@
 #include "./block.hpp"
+#include <sstream>
+#include <time.h>
+#include "utils.hpp"
 
-Block::Block(uint32_t timestamp, std::string lastHash, std::string hash, uint32_t nonce,
-             uint32_t difficulty)
-    : timestamp(timestamp), lastHash(lastHash), hash(hash), nonce(nonce), difficulty(difficulty)
+Block::Block(std::string lastHash) : lastHash(lastHash) {}
+
+void Block::Hash()
 {
+    std::time_t timestamp = std::time(nullptr);
+    this->timestamp       = timestamp;
+
+    std::stringstream ss;
+    ss << timestamp << lastHash << nonce << difficulty;
+    std::string serializedBlock = ss.str();
+
+    // either hash all the transactions, or append merkle root here
+
+    hash = Utils::HashString(serializedBlock);
+}
+
+std::string Block::GetHash() const noexcept { return hash; }
+
+Block Genesis()
+{
+    Block genesis(std::string("0000000000000000000000000000000000"));
+    genesis.Hash();
+    return genesis;
 }

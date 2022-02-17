@@ -9,13 +9,17 @@ private:
     uint32_t    timestamp;
     std::string lastHash;
     std::string hash;
-    uint32_t    nonce;
-    uint32_t    difficulty;
+    uint64_t    nonce      = 0;
+    uint32_t    difficulty = 2;
 
     // Will store all transactions within the block
     std::vector<Transaction> transactions;
 
 public:
-    Block(uint32_t timestamp, std::string lastHash, std::string hash, uint32_t nonce,
-          uint32_t difficulty);
+    Block(std::string lastHash);
+
+    void        Hash();
+    std::string GetHash() const noexcept;
 };
+
+Block Genesis();
